@@ -1,10 +1,10 @@
 const path = require('path');
 
-const { fatal, error } = require('./logger');
+const { fatal } = require('./logger');
 const AppError = require('./app-error');
 
 
-module.exports = async function (err) { 
+module.exports = async function (err) {
   let errorStack = '';
   const basePath = path.resolve(__dirname, '../');
   if (err.stack && err.stack !== '') {

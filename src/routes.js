@@ -33,7 +33,9 @@ module.exports = {
 
     if (preExecCallback && typeof preExecCallback === 'function') {
       // call pre execution callback if defined
-      preExecCallback({ key, request });
+      preExecCallback({
+        key, request,
+      });
     }
     return match.func(request);
   },

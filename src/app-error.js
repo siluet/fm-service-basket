@@ -1,9 +1,9 @@
 module.exports = class AppError extends Error {
-  constructor (message, request) {
-  
+  constructor(message, request) {
+
     // Calling parent constructor of base Error class.
     super(message);
-    
+
     // Saving class name in the property of our custom error as a shortcut.
     this.name = this.constructor.name;
 
@@ -17,6 +17,6 @@ module.exports = class AppError extends Error {
     } else {
       this.stack = (new Error(message)).stack;
     }
-    
+
   }
 };

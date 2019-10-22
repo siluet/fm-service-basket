@@ -20,7 +20,8 @@ global.amqp = {
  * @returns {{ connection, channel }}
  */
 async function initAmqp() {
-  let connection, channel;
+  let connection,
+    channel;
 
   try {
     // connect to RabbitMQ
@@ -43,7 +44,9 @@ async function initAmqp() {
     throw new Error(`RabbitMQ connection error! ${(err && err.message) ? err.message : ''}`);
   });
 
-  return { connection, channel };
+  return {
+    connection, channel,
+  };
 }
 
 
@@ -55,9 +58,7 @@ async function initAmqp() {
 async function consume(messageHandler) {
   const queue = 'request-basket';
 
-  global.amqp.channel.assertQueue(queue, {
-    durable: false,
-  });
+  global.amqp.channel.assertQueue(queue, { durable: false });
 
   global.amqp.channel.prefetch(1);
 
@@ -66,9 +67,7 @@ async function consume(messageHandler) {
   global.amqp.channel.consume(queue, async (msg) => {
     const resp = await messageHandler(msg);
     global.amqp.channel.sendToQueue(msg.properties.replyTo,
-      Buffer.from(JSON.stringify(resp)), {
-        correlationId: msg.properties.correlationId,
-      });
+      Buffer.from(JSON.stringify(resp)), { correlationId: msg.properties.correlationId });
     global.amqp.channel.ack(msg);
   });
 }
@@ -96,30 +95,32 @@ process.on('uncaughtException', errorHandler);
 
 /**
  * Create & return a request object.
- * 
- * @param {string} reqId 
- * @param {string} msg 
- * @param {object | null} params 
+ *
+ * @param {string} reqId
+ * @param {string} msg
+ * @param {object | null} params
  * @returns {{ id, params }}
  */
-const requestFactory = (reqId, msg, params = null) => {
-  return { 
-    id: reqId,
-    msg,
-    route: null,
-    params,
-  };
-};
+const requestFactory = (reqId, msg, params = null) => ({
+  id: reqId,
+  msg,
+  route: null,
+  params,
+});
 
 
-async function messageHandlerConsole(msg) {  
+async function messageHandlerConsole(msg) {
   const objMsg = JSON.parse(msg.content.toString());
   const reqId = objMsg.id || null;
 
   console.log(`[${new Date().toISOString()}] ${msg.fields.routingKey}: ${msg.content.toString()}`);
-  return routes.callAction(objMsg.action, requestFactory(reqId, objMsg.action, objMsg.params ? objMsg.params : {}), ({ key, request }) => {
-    logger.trace(request.route, 'start', request.id);
-  });
+  return routes.callAction(
+    objMsg.action,
+    requestFactory(reqId, objMsg.action, objMsg.params ? objMsg.params : {}),
+    ({ key, request }) => {
+      logger.trace(request.route, 'start', request.id);
+    },
+  );
 }
 
 
@@ -134,8 +135,6 @@ async function messageHandlerConsole(msg) {
   consume(messageHandlerConsole);
 
 })();
-
-
 
 
 // const basketRepo = require('./basket-repo');

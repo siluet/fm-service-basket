@@ -11,8 +11,8 @@ module.exports = (() => {
 
   /**
    * Publish log message. Usage: logger.log(['moduleName', 'actionName'], 'logMessage', requestId))
-   * 
-   * @TODO: Add fallback logging handler like file handler. 
+   *
+   * @TODO: Add fallback logging handler like file handler.
    * @TODO: Seperate this Writer/Publisher func to its own module and logger can accept writer/publisher as param.
    *
    * @param {string} appName
@@ -24,7 +24,9 @@ module.exports = (() => {
     const key = `${appName}.${level}`;
 
     global.amqp.channel.assertExchange(exchange, 'topic', { durable: false });
-    const opts = (level === levels.fatal || level == levels.error) ? { immediate: true, priority: 255 } : {};
+    const opts = (level === levels.fatal || level === levels.error) ? {
+      immediate: true, priority: 255,
+    } : {};
     return global.amqp.channel.publish(exchange, key, Buffer.from(JSON.stringify(message)), opts);
   }
 
@@ -48,7 +50,7 @@ module.exports = (() => {
       message.log = logMsg;
     }
 
-    return publishMessage(app, level, message);    
+    return publishMessage(app, level, message);
   }
 
   return {

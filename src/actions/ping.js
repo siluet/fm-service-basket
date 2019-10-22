@@ -9,9 +9,7 @@ module.exports = {
   },
 
   async ping() {
-    const sleep = (milliseconds) => {
-      return new Promise(resolve => setTimeout(resolve, milliseconds));
-    };
+    const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
     await sleep(2500);
     return { ping: 'pong' };
   },

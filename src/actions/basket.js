@@ -18,8 +18,8 @@ module.exports = {
 
     try {
       return basketRepo.getAll(userId);
-    } catch(err) {
-      throw new AppError(`Unable to get basket data ${dataFile}`, request);
+    } catch (err) {
+      throw new AppError(`Unable to get basket data for userId ${userId}`, request);
     }
   },
 

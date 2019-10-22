@@ -1,28 +1,32 @@
-const loki = require('lokijs');
+const Loki = require('lokijs');
 const uuidv1 = require('uuid/v1');
 
-const db = new loki('basket');
-let products = db.addCollection('items', { products: ['userid'] });
+const db = new Loki('basket');
+const products = db.addCollection('items', { products: ['userid'] });
 
 
 class BasketProduct {
   constructor(userid, productid, count = 1) {
-      this.id = uuidv1();
-      this.userid = userid;
-      this.productid = productid;
-      this.count = count;
-      this.createdAt = new Date().toISOString();
+    this.id = uuidv1();
+    this.userid = userid;
+    this.productid = productid;
+    this.count = count;
+    this.createdAt = new Date().toISOString();
   }
+
   increaseCount(by = 1) {
     this.count += by;
   }
+
   decreaseCount(by = 1) {
     this.count -= by;
   }
 }
 
 function getUserProduct(userid, productid) {
-  const existingProduct = products.findOne({ userid, productid });
+  const existingProduct = products.findOne({
+    userid, productid,
+  });
   if (existingProduct && existingProduct instanceof BasketProduct) {
     return existingProduct;
   }
@@ -38,7 +42,7 @@ module.exports = {
     }
 
     return existingProducts.map((p) => {
-      const { meta, $loki, userid, createdAt, ...productData } = p;
+      const { meta, $loki, userid: userId, createdAt, ...productData } = p;
       return productData;
     });
   },
@@ -51,17 +55,17 @@ module.exports = {
       products.insert(basketProduct);
       return true;
     }
-    
+
     basketProduct.increaseCount(by);
     products.update(basketProduct);
     return true;
   },
 
   remove: (userid, productid, by) => {
-    let basketProduct = getUserProduct(userid, productid);
+    const basketProduct = getUserProduct(userid, productid);
     if (!basketProduct) {
       return true;
-    } 
+    }
     basketProduct.decreaseCount(by);
 
     if (basketProduct.count <= 0) {
