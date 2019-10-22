@@ -1,0 +1,32 @@
+{
+  "name": "@ecamdere/fm-basket-microservice",
+  "version": "0.0.1",
+  "description": "Basket MicroService of the api platform",
+  "main": "./src/app.js",
+  "scripts": {
+    "dev": "NODE_ENV=dev NODE_DEBUG=dev ./node_modules/.bin/nodemon src/app.js",
+    "inspect": "NODE_ENV=dev node --inspect src/app.js",
+    "lint": "./node_modules/.bin/eslint .",
+    "test": "./node_modules/.bin/eslint . && NODE_ENV=test jest --watchAll --verbose",
+    "start": "NODE_ENV=production ./node_modules/.bin/forever start src/app.js",
+    "list": "./node_modules/.bin/forever list"
+  },
+  "author": "Emre CAMDERE <cemre79@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.5",
+    "dotenv": "^8.2.0",
+    "forever": "^1.0.0",
+    "lokijs": "^1.5.7"
+  },
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.20.0",
+    "eslint-plugin-security": "^1.4.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "supertest": "^4.0.2"
+  }
+}
