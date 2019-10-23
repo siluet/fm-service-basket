@@ -61,7 +61,7 @@ module.exports = {
     return true;
   },
 
-  remove: (userid, productid, by) => {
+  delete: (userid, productid, by = 1) => {
     const basketProduct = getUserProduct(userid, productid);
     if (!basketProduct) {
       return true;
