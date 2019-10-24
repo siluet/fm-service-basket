@@ -22,7 +22,6 @@ module.exports = {
 
   async getUserBasket(request) {
     const userId = request.params.uid;
-    console.log(userId);
 
     try {
       return basketRepo.getAll(userId);
