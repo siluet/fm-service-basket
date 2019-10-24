@@ -1,5 +1,6 @@
 require('dotenv').config();
 const amqplib = require('amqplib');
+const pTimeout = require('p-timeout');
 
 /**
  * Require our modules
@@ -25,7 +26,9 @@ async function initAmqp() {
 
   try {
     // connect to RabbitMQ
-    connection = await amqplib.connect(process.env.RABBITMQ_URL);
+    connection = await pTimeout(amqplib.connect(process.env.RABBITMQ_URL), 500)
+      .then((conn) => conn)
+      .catch(err => { console.log(err.message); process.exit(1); });
 
     // create a channel
     channel = await connection.createChannel();
@@ -135,27 +138,3 @@ async function messageHandlerConsole(msg) {
   consume(messageHandlerConsole);
 
 })();
-
-
-// const basketRepo = require('./basket-repo');
-
-// const basketProducts = basketRepo.getAll(1);
-// console.log('basketProducts');
-// console.log(basketProducts);
-// console.log(JSON.stringify(basketProducts));
-
-
-// basketRepo.add(1, 3);
-// basketRepo.add(1, 5);
-// basketRepo.add(1, 2);
-// basketRepo.add(1, 3);
-// basketRepo.add(1, 3);
-// basketRepo.remove(1, 3);
-// basketRepo.remove(1, 3);
-// basketRepo.remove(1, 3);
-// basketRepo.remove(1, 3);
-
-// const basketProducts2 = basketRepo.getAll(1);
-// console.log('basketProducts2');
-// console.log(basketProducts2);
-// console.log(JSON.stringify(basketProducts2));

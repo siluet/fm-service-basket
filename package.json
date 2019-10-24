@@ -18,6 +18,7 @@
     "dotenv": "^8.2.0",
     "forever": "^1.0.0",
     "lokijs": "^1.5.7",
+    "p-timeout": "^3.2.0",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
